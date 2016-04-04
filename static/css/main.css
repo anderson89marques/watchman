@@ -1,0 +1,19 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+.total_info {
+    width: 100%;
+    height: 200px;
+}
+
+.table.table-bordered {
+    font-size: small;
+}
+
+.menu {
+    height: 100%;
+}
+

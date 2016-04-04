@@ -1,0 +1,10 @@
+.idea
+*.pyc
+__pycache__
+file-info.py
+teste.yaml
+docs
+dist
+scripts
+build
+watchman.egg-info
