@@ -13,17 +13,17 @@ class Usuario(Base):
 
     id = Column(Integer, primary_key=True)
     login = Column(Text, nullable=True)
-    senha = Column(Text, nullable=True)
+    passwd = Column(Text, nullable=True)
     principals = relationship("Principal", secondary="usuario_principal")
 
-    def add_senha(self, senha):
+    def add_passwd(self, senha):
         #Criando um objeto que usará criptografia do método shs256, rounds default de 80000
         cripto = CryptContext(schemes="sha256_crypt")
 
         #Encriptografando uma string
         self.senha = cripto.encrypt(senha)
 
-    def validate_senha(self, senha):
+    def validate_passwd(self, senha):
          #Criando um objeto que usará criptografia do método shs256, rounds default de 80000
         cripto = CryptContext(schemes="sha256_crypt")
 

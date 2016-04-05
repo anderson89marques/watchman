@@ -20,7 +20,8 @@ sched = TornadoScheduler()
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [(r'/login/', LoginHandler), (r'/control/', MainHandler), (r'/ws/', EchoWebSocket),
-                    (r'/logout/', LogoutHandler), (r'/create_user/', CreateUser), (r'/action', StartOrStopOrRemoveJOB),]
+                    (r'/logout/', LogoutHandler), (r'/create_user/', CreateUser), (r'/action', StartOrStopOrRemoveJOB),
+                    ]
 
         jinja2Loader = Jinja2Loader(rel('templates'))
 
@@ -44,8 +45,9 @@ class Application(tornado.web.Application):
 def main():
     print("Inicializando aplicação...")
     define('listen', metavar='IP', default='{ip}'.format(ip=LOCAL_IP), help='listen on IP address (default 127.0.0.1)')
-    define('port', metavar='PORT', default=6544, type=int, help='listen on PORT (default 6544)')
-    define('debug', metavar='True|False', default=False, type=bool, help='enable Tornado debug mode: templates will not be cached '
+    define('port', metavar='PORT', default=10000, type=int, help='listen on PORT (default 6544)')
+    define('debug', metavar='True|False', default=False, type=bool,
+           help='enable Tornado debug mode: templates will not be cached '
            'and the app will watch for changes to its source files '
            'and reload itself when anything changes')
 

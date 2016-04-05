@@ -1,5 +1,5 @@
 import datetime
-import logging
+#import logging
 import configparser
 import ssl
 import subprocess
@@ -8,10 +8,13 @@ import json
 import websocket
 import yaml
 
+from core.services import Log
 from core.sshManager import SSHManager
 from core.models import DomainHost, DomainService
 from configuration import (EXITS_STATUS, REMOTE_DIR_SCRIPTS, HOSTS_INI_FILE, DEFAULT_SCRIPTS_PATH, PROJECT_DIR,
                            LOCAL_IP)
+
+log = Log(__name__)
 
 
 class LoadFile:
@@ -70,7 +73,7 @@ class LoadFile:
                 for conf in self.configparser[section]:
                     hs.append(self.get_host_data(host_name=conf, host=self.configparser[section][conf]))
         except Exception as e:
-            print(e.__str__())
+            log.info(e.__str__())
 
         return hs
 
@@ -81,7 +84,7 @@ class LoadFile:
             for conf in self.configparser[section]:
                 hs.append(self.get_host_data(host_name=conf, host=self.configparser[section][conf]))
         except Exception as e:
-            print(e.__str__())
+            log.info(e.__str__())
 
         return hs
 
@@ -116,7 +119,7 @@ class Servico:
         try:
             ssh.connect(hostname=host["ip"], username=host["username"], password=host["password"])
         except Exception as e:
-            print("Erro na tentiva de conexão: {}".format(e.__str__()))
+            log.info("Erro na tentiva de conexão: {}".format(e.__str__()))
 
         return ssh
 
@@ -125,7 +128,7 @@ class Servico:
             if self.args else "{dir}/{script}".format(dir=REMOTE_DIR_SCRIPTS, script=self.script)
 
         r = self.remote_conn.exec_command(cmd)
-        logging.info("Resposta exec_command:{}".format(r))
+        log.info("Resposta exec_command:{}".format(r))
 
         if r["exit_status"] == 127:
             r["exit_status"] = 2  # para tratar como CRITICAL
@@ -151,7 +154,7 @@ class Servico:
 
 
 def update_service(db, servico, host, r):
-    ws = websocket.create_connection("ws://{}:6544/ws/".format(LOCAL_IP),
+    ws = websocket.create_connection("ws://{}:10000/ws/".format(LOCAL_IP),
                                      sslopt={"cert_reqs": ssl.CERT_NONE, "check_hostname": False}, )
 
     d = datetime.datetime.now()
@@ -184,7 +187,7 @@ def exec_local_scripts(db, servico, host):
 
         update_service(db, servico, host, r)
     except Exception as e:
-        print("Erro exec local scripts:{}".format(e.__str__()))
+        log.info("Erro exec local scripts:{}".format(e.__str__()))
 
 
 def exec_remote_scripts(db, servico, host):
@@ -198,7 +201,7 @@ def exec_remote_scripts(db, servico, host):
 
         update_service(db, servico, host, r)
     except Exception as e:
-        print("Erro exec remote scripts: {}".format(e.__str__()))
+        log.info("Erro exec remote scripts: {}".format(e.__str__()))
 
 
 def add_to_sched(sched, func, db, servico, host):
@@ -249,7 +252,7 @@ def process(db, schedule):
     load_file = LoadFile()
     managefile = load_file.safe_load("{dir}/teste.yaml".format(dir=PROJECT_DIR))
     #managefile = load_file.safe_load("{dir}/services.yaml".format(dir=WORK_DIR))
-    print(managefile)
+    log.info(managefile)
 
     ht = []  # será usado no controle dos hosts e serviços que foram excluídos do arquivo .yaml
     for manage in managefile:
@@ -310,14 +313,14 @@ def process(db, schedule):
             db.commit()
         except Exception as e:
             db.rollback()
-            print("Erro DB: {}".format(e.__str__()))
+            log.info("Erro DB: {}".format(e.__str__()))
 
     # iniciando os jobs
     sched.start()
 
     # atualizando as informações a partir do arquivo services.yaml
     update_database(db, ht, managefile)
-    print("jobs running!")
+    log.info("jobs running!")
 
 #process()
 
