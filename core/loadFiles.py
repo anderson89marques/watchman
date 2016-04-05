@@ -8,6 +8,7 @@ import json
 import websocket
 import yaml
 
+from configuration.config import WORK_DIR
 from core.services import Log
 from core.sshManager import SSHManager
 from core.models import DomainHost, DomainService
@@ -250,8 +251,8 @@ def process(db, schedule):
     sched = schedule
 
     load_file = LoadFile()
-    managefile = load_file.safe_load("{dir}/teste.yaml".format(dir=PROJECT_DIR))
-    #managefile = load_file.safe_load("{dir}/services.yaml".format(dir=WORK_DIR))
+    #managefile = load_file.safe_load("{dir}/teste.yaml".format(dir=PROJECT_DIR))
+    managefile = load_file.safe_load("{dir}/services.yaml".format(dir=WORK_DIR))
     log.info(managefile)
 
     ht = []  # será usado no controle dos hosts e serviços que foram excluídos do arquivo .yaml
