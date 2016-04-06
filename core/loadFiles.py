@@ -8,12 +8,11 @@ import json
 import websocket
 import yaml
 
-from configuration.config import WORK_DIR
 from core.services import Log
 from core.sshManager import SSHManager
 from core.models import DomainHost, DomainService
 from configuration import (EXITS_STATUS, REMOTE_DIR_SCRIPTS, HOSTS_INI_FILE, DEFAULT_SCRIPTS_PATH, PROJECT_DIR,
-                           LOCAL_IP)
+                           LOCAL_IP, WORK_DIR)
 
 log = Log(__name__)
 
@@ -251,7 +250,7 @@ def process(db, schedule):
     sched = schedule
 
     load_file = LoadFile()
-    #managefile = load_file.safe_load("{dir}/teste.yaml".format(dir=PROJECT_DIR))
+    managefile = load_file.safe_load("{dir}/teste.yaml".format(dir=PROJECT_DIR))
     managefile = load_file.safe_load("{dir}/services.yaml".format(dir=WORK_DIR))
     log.info(managefile)
 

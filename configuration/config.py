@@ -25,5 +25,4 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # dir
 
 DEFAULT_SCRIPTS_PATH = "{}/scripts/local".format(PROJECT_DIR)  # aqui deve home/user/watchman/scripts
 
-LOCAL_IP = "192.168.0.105"
-#LOCAL_IP = "192.168.1.188"
+LOCAL_IP = "192.168.1.188"
